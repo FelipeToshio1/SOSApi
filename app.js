@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require ('cors');
-const admin = require("firebase");
+const admin = require('firebase');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+var jsonParser = bodyParser.json();
 
 app.get('/', (req,res) => {
     res.send('server running');
@@ -20,16 +23,19 @@ admin.initializeApp({
     appId: "1:664393345033:web:0272052ebc4096fcd4b0d8"
 });
 
-app.post('/addDatabase', async (req,res) => {
+app.post('/addDatabase', jsonParser, async (req,res) => {
    
     var db = admin.database();
-    var ref = db.ref("queue");
+    var ref = db.ref("database");
 
-    var data = {
-        name: "test"
-    }
+    var queueRef = ref.child("queue");
 
-    ref.push(data);
+    queueRef.set({
+        toshio: {
+            name: "test",
+            coordinate: req.body.coordinate
+        }
+    });
 })
 
 app.listen(3000);
