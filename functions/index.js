@@ -33,16 +33,18 @@ app.post('/addDatabase', jsonParser, async (req,res) => {
     var db = admin.database();
     var ref = db.ref("database");
 
-    var queueRef = ref.child("queue");
+    var name = req.body.name
+
+    var queueRef = ref.child("queue/" + name);
 
     queueRef.set({
-        toshio: {
-            name: "test",
-            coordinate: req.body.coordinate
-        }
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        timestamp: req.body.timestamp
+        
     });
 
-    res.send("ok");
+    res.send("created");
 });
 
 exports.addCoordinates = functions.https.onRequest(app);
